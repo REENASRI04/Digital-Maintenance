@@ -1,0 +1,48 @@
+<div class="landing-container">
+    <div class="hero-section">
+        <h1>Welcome to Digital Maintenance Tracker</h1>
+        <p>Efficiently manage your building maintenance requests with ease.</p>
+
+        <div class="cta-buttons" *ngIf="!(isLoggedIn$ | async)">
+            <button mat-raised-button color="primary" routerLink="/login">Login</button>
+            <button mat-stroked-button color="primary" routerLink="/register">Register</button>
+        </div>
+
+        <div class="cta-buttons" *ngIf="isLoggedIn$ | async">
+            <button mat-raised-button color="accent" (click)="navigateToDashboard()">Go to Dashboard</button>
+        </div>
+    </div>
+
+    <div class="features-grid">
+        <mat-card class="feature-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar color="primary">assignment</mat-icon>
+                <mat-card-title>Residents</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>Submit maintenance requests and track their status in real-time. Upload photos and provide feedback.
+                </p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="feature-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar color="accent">build</mat-icon>
+                <mat-card-title>Technicians</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>View assigned tasks, update job progress, and manage your workload efficiently.</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="feature-card">
+            <mat-card-header>
+                <mat-icon mat-card-avatar color="warn">admin_panel_settings</mat-icon>
+                <mat-card-title>Admins</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>Oversee all operations, assign technicians to requests, and monitor overall performance.</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

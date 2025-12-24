@@ -1,0 +1,53 @@
+<div class="dashboard-container">
+    <h2>Technician Dashboard</h2>
+
+    <mat-card *ngIf="requests.length === 0" class="empty-card">
+        <mat-card-content>No assigned tasks.</mat-card-content>
+    </mat-card>
+
+    <div *ngIf="requests.length > 0" class="table-container">
+        <table mat-table [dataSource]="requests" class="mat-elevation-z8">
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> #{{element.id}} </td>
+            </ng-container>
+
+            <!-- Category Column -->
+            <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef> Category </th>
+                <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Description </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+            </ng-container>
+
+            <!-- Current Status -->
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Current Status </th>
+                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+            </ng-container>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Update Status </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                        <mat-select [value]="element.status" (selectionChange)="updateStatus(element, $event.value)">
+                            <mat-option value="Assigned" disabled>Assigned</mat-option>
+                            <mat-option value="In-Progress">In-Progress</mat-option>
+                            <mat-option value="Resolved">Resolved</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</div>

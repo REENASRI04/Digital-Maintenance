@@ -1,0 +1,30 @@
+.dashboard-container {
+    padding: 24px;
+}
+
+.stats-cards {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    min-width: 200px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+}
+
+.unassigned {
+    color: red;
+    font-style: italic;
+}
+
+mat-form-field {
+    width: 150px;
+}
