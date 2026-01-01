@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RequestService, MaintenanceRequest } from '../../../core/services/request.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-technician-dashboard',
@@ -9,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class DashboardComponent implements OnInit {
     requests: MaintenanceRequest[] = [];
-    displayedColumns: string[] = ['id', 'category', 'description', 'status', 'actions'];
+    displayedColumns: string[] = ['id', 'category', 'address', 'description', 'status', 'actions'];
 
     constructor(private requestService: RequestService, private snackBar: MatSnackBar) { }
 
@@ -23,6 +24,16 @@ export class DashboardComponent implements OnInit {
         });
     }
 
+    getStatusColor(status: string): string {
+        switch (status) {
+            case 'New': return 'primary';
+            case 'Assigned': return 'accent';
+            case 'In-Progress': return 'warn';
+            case 'Resolved': return 'primary';
+            default: return '';
+        }
+    }
+
     updateStatus(request: MaintenanceRequest, newStatus: string) {
         if (request.status === newStatus) return;
 
@@ -30,11 +41,16 @@ export class DashboardComponent implements OnInit {
             next: () => {
                 this.snackBar.open(`Status updated to ${newStatus}`, 'Close', { duration: 3000 });
                 request.status = newStatus as any;
-                // Force refresh if needed or just update local model which is done above
             },
             error: () => {
                 this.snackBar.open('Failed to update status', 'Close', { duration: 3000 });
             }
         });
+    }
+
+    viewMedia(path: string) {
+        if (!path) return;
+        const fullUrl = `${environment.apiUrl.replace('/api', '')}/${path.replace(/\\/g, '/')}`;
+        window.open(fullUrl, '_blank');
     }
 }

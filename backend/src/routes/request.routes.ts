@@ -2,20 +2,25 @@ import express from 'express';
 import { body } from 'express-validator';
 import { requireAuth } from '../middleware/auth';
 import { checkRole } from '../middleware/roleGuard';
-import { createRequest, getRequests, getRequestById, assignTechnician, updateStatus, addFeedback } from '../controllers/requestController';
+import { createRequest, getRequests, getRequestById, assignTechnician, updateStatus, addFeedback, getCategories } from '../controllers/requestController';
 import { upload } from '../middleware/upload';
+
+import { MAINTENANCE_CATEGORIES, REQUEST_STATUSES } from '../config/constants';
 
 const router = express.Router();
 
 router.use(requireAuth);
+
+router.get('/categories', getCategories);
 
 router.post(
     '/',
     checkRole(['resident']),
     upload.single('media'),
     [
-        body('category').isIn(['Plumbing', 'Electrical', 'Painting', 'Other']).withMessage('Invalid category'),
-        body('description').notEmpty().withMessage('Description is required')
+        body('category').isIn([...MAINTENANCE_CATEGORIES]).withMessage('Invalid category'),
+        body('description').notEmpty().withMessage('Description is required'),
+        body('address').notEmpty().withMessage('Address is required')
     ],
     createRequest
 );
@@ -33,7 +38,7 @@ router.patch(
 router.patch(
     '/:id/status',
     checkRole(['technician', 'admin']),
-    [body('status').isIn(['New', 'Assigned', 'In-Progress', 'Resolved']).withMessage('Invalid status')],
+    [body('status').isIn([...REQUEST_STATUSES]).withMessage('Invalid status')],
     updateStatus
 );
 

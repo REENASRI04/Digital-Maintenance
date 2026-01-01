@@ -2,26 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
-export interface MaintenanceRequest {
-    id?: number;
-    category: string;
-    description: string;
-    media?: string;
-    status: 'New' | 'Assigned' | 'In-Progress' | 'Resolved';
-    resident_name?: string;
-    technician_name?: string;
-    created_at?: string;
-    technician_id?: number | null;
-    feedback_rating?: number;
-    feedback_comment?: string;
-}
+import { MaintenanceRequest } from '../models/maintenance-request.model';
+export { MaintenanceRequest };
 
 @Injectable({
     providedIn: 'root'
 })
 export class RequestService {
     constructor(private http: HttpClient) { }
+
+    getCategories(): Observable<string[]> {
+        return this.http.get<string[]>(`${environment.apiUrl}/requests/categories`);
+    }
 
     createRequest(data: FormData): Observable<any> {
         return this.http.post(`${environment.apiUrl}/requests`, data);

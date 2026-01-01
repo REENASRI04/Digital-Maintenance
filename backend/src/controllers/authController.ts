@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { validationResult } from 'express-validator';
 import pool from '../config/database';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
@@ -14,11 +13,7 @@ interface User extends RowDataPacket {
 }
 
 export const register = async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
-        return;
-    }
+ 
 
     const { name, email, password, role, contact_info } = req.body;
 
@@ -29,6 +24,7 @@ export const register = async (req: Request, res: Response) => {
             return;
         }
 
+        // hash password
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
 

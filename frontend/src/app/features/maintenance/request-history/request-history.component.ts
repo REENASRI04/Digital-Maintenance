@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class RequestHistoryComponent implements OnInit {
     requests: MaintenanceRequest[] = [];
-    displayedColumns: string[] = ['id', 'category', 'description', 'created_at', 'status', 'actions'];
+    displayedColumns: string[] = ['id', 'category', 'address', 'description', 'created_at', 'status', 'actions'];
 
     selectedRequestForFeedback: MaintenanceRequest | null = null;
     feedbackRating: number = 5;

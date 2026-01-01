@@ -14,7 +14,8 @@ export class RequestFormComponent implements OnInit {
     loading = false;
     error = '';
     selectedFile: File | null = null;
-    categories = ['Plumbing', 'Electrical', 'Painting', 'Other'];
+    fileName = '';
+    categories: string[] = [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -26,12 +27,33 @@ export class RequestFormComponent implements OnInit {
     ngOnInit() {
         this.requestForm = this.formBuilder.group({
             category: ['', Validators.required],
-            description: ['', Validators.required]
+            description: ['', Validators.required],
+            address: ['', Validators.required]
+        });
+
+        this.loadCategories();
+    }
+
+    loadCategories() {
+        this.requestService.getCategories().subscribe({
+            next: (categories) => {
+                this.categories = categories;
+            },
+            error: (err) => {
+                console.error('Error loading categories:', err);
+            }
         });
     }
 
     onFileSelected(event: any) {
-        this.selectedFile = event.target.files[0] ?? null;
+        const file = event.target.files[0];
+        if (file) {
+            this.selectedFile = file;
+            this.fileName = file.name;
+        } else {
+            this.selectedFile = null;
+            this.fileName = '';
+        }
     }
 
     onSubmit() {
@@ -43,6 +65,7 @@ export class RequestFormComponent implements OnInit {
         const formData = new FormData();
         formData.append('category', this.requestForm.get('category')!.value);
         formData.append('description', this.requestForm.get('description')!.value);
+        formData.append('address', this.requestForm.get('address')!.value);
 
         if (this.selectedFile) {
             formData.append('media', this.selectedFile);

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RequestService, MaintenanceRequest } from '../../../core/services/request.service';
 import { UserService } from '../../../core/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-admin-dashboard',
@@ -11,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class DashboardComponent implements OnInit {
     requests: MaintenanceRequest[] = [];
     technicians: any[] = [];
-    displayedColumns: string[] = ['id', 'category', 'status', 'technician', 'actions'];
+    displayedColumns: string[] = ['id', 'category', 'address', 'description', 'status', 'technician', 'actions'];
 
     constructor(
         private requestService: RequestService,
@@ -53,5 +54,21 @@ export class DashboardComponent implements OnInit {
                 this.snackBar.open('Failed to assign technician', 'Close', { duration: 3000 });
             }
         });
+    }
+
+    getStatusColor(status: string): string {
+        switch (status) {
+            case 'New': return 'primary';
+            case 'Assigned': return 'accent';
+            case 'In-Progress': return 'warn';
+            case 'Resolved': return 'primary';
+            default: return '';
+        }
+    }
+
+    viewMedia(path: string) {
+        if (!path) return;
+        const fullUrl = `${environment.apiUrl.replace('/api', '')}/${path.replace(/\\/g, '/')}`;
+        window.open(fullUrl, '_blank');
     }
 }

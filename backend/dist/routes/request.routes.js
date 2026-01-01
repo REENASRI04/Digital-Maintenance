@@ -11,9 +11,11 @@ const requestController_1 = require("../controllers/requestController");
 const upload_1 = require("../middleware/upload");
 const router = express_1.default.Router();
 router.use(auth_1.requireAuth);
+router.get('/categories', requestController_1.getCategories);
 router.post('/', (0, roleGuard_1.checkRole)(['resident']), upload_1.upload.single('media'), [
-    (0, express_validator_1.body)('category').isIn(['Plumbing', 'Electrical', 'Painting', 'Other']).withMessage('Invalid category'),
-    (0, express_validator_1.body)('description').notEmpty().withMessage('Description is required')
+    (0, express_validator_1.body)('category').isIn(['Plumbing', 'Electrical', 'Painting', 'Carpentry', 'Cleaning', 'Appliance Repair', 'Other']).withMessage('Invalid category'),
+    (0, express_validator_1.body)('description').notEmpty().withMessage('Description is required'),
+    (0, express_validator_1.body)('address').notEmpty().withMessage('Address is required')
 ], requestController_1.createRequest);
 router.get('/', requestController_1.getRequests);
 router.get('/:id', requestController_1.getRequestById);

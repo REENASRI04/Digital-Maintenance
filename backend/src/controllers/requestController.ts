@@ -1,26 +1,21 @@
 import { Request, Response } from 'express';
 import pool from '../config/database';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
-import { validationResult } from 'express-validator';
+import { MAINTENANCE_CATEGORIES } from '../config/constants';
 
 export const createRequest = async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
-        return;
-    }
 
-    const { category, description } = req.body;
+    const { category, description, address } = req.body;
     const media = req.file ? req.file.path : null;
     const residentId = req.currentUser!.id;
 
     try {
         const [result] = await pool.query<ResultSetHeader>(
-            'INSERT INTO requests (resident_id, category, description, media) VALUES (?, ?, ?, ?)',
-            [residentId, category, description, media]
+            'INSERT INTO requests (resident_id, category, description, address, media) VALUES (?, ?, ?, ?, ?)',
+            [residentId, category, description, address, media]
         );
 
-        res.status(201).send({ id: result.insertId, residentId, category, description, media, status: 'New' });
+        res.status(201).send({ id: result.insertId, residentId, category, description, address, media, status: 'New' });
     } catch (err) {
         console.error(err);
         res.status(500).send({ errors: [{ message: 'Server error' }] });
@@ -96,6 +91,14 @@ export const addFeedback = async (req: Request, res: Response) => {
     try {
         await pool.query('UPDATE requests SET feedback_rating = ?, feedback_comment = ? WHERE id = ?', [rating, comment, requestId]);
         res.send({ message: 'Feedback added successfully' });
+    } catch (err) {
+        res.status(500).send({ errors: [{ message: 'Server error' }] });
+    }
+};
+
+export const getCategories = async (req: Request, res: Response) => {
+    try {
+        res.send(MAINTENANCE_CATEGORIES);
     } catch (err) {
         res.status(500).send({ errors: [{ message: 'Server error' }] });
     }

@@ -12,12 +12,12 @@ const createRequest = async (req, res) => {
         res.status(400).json({ errors: errors.array() });
         return;
     }
-    const { category, description } = req.body;
+    const { category, description, address } = req.body;
     const media = req.file ? req.file.path : null;
     const residentId = req.currentUser.id;
     try {
-        const [result] = await database_1.default.query('INSERT INTO requests (resident_id, category, description, media) VALUES (?, ?, ?, ?)', [residentId, category, description, media]);
-        res.status(201).send({ id: result.insertId, residentId, category, description, media, status: 'New' });
+        const [result] = await database_1.default.query('INSERT INTO requests (resident_id, category, description, address, media) VALUES (?, ?, ?, ?, ?)', [residentId, category, description, address, media]);
+        res.status(201).send({ id: result.insertId, residentId, category, description, address, media, status: 'New' });
     }
     catch (err) {
         console.error(err);
